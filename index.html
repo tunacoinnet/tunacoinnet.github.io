@@ -1,1 +1,175 @@
-TUNACOIN GIT
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="TUNACOIN">
+    <meta name="author" content="TUNACOIN">
+    <link rel="icon" href="https://tunacoinnet.github.io/css/BITSBR-LOGO-MINI-2.jpg">
+
+    <title>TUNACOIN BLOCKCHAIN</title>
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/starter-template/">
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->    
+    <link href="https://getbootstrap.com/docs/4.0/examples/starter-template/starter-template.css" rel="stylesheet">
+ 
+    
+    <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=HX943KkJcjquWqPgmMHWzXStfL_3sWcNg_QcZW1Uq5WMATbl076704JTtztCDCjs8cFdjuEdnZZopdynTsgUFg" charset="UTF-8"></script><style>
+      footer {text-align: center; margin: auto;}
+      starter-template {margin: auto; margin-top: 60px;}
+    </style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <a class="navbar-brand" href="#">TUNA</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+          </li>
+
+              
+             <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://dex.tunacoin.org">Dex</a>
+          </li>
+          
+       <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://scan.tunacoin.org">Tunacoin Scan</a>
+          </li>
+          
+         
+       <li class="nav-item">
+            <a class="nav-link" target="_blank" href="https://github.com/tunacoinnet/"> Repositories </a>
+          </li>
+          
+        
+                  
+      
+          </ul>
+
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+
+      <div class="starter-template">
+        <img width="150" src="https://tunacoinnet.github.io/css/ico-tunacoin.jpg" />
+        <p class="lead">Blockchain</p>
+      </div>
+
+      
+<p>Base58 encoding is used to encode <a href="https://en.bitcoin.it/wiki/Address">Bitcoin addresses</a> and <a href="https://ipfs.io/">IPFS</a> content hashes, among other things.</p>
+
+<p>Use this tool to encode data in Base58, or to decode Base58 data. Seeds</p>
+
+<fieldset>
+    <input id="hexradio" type="radio" name="plainformat" value="hex">
+    <label for="hexradio">Hexadecimal</label>
+    <input id="txtradio" type="radio" name="plainformat" value="txt" checked>
+    <label for="txtradio">Raw data (e.g. text)</label>
+</fieldset>
+
+<div class="row">
+    <div class="col-md-6">
+        <textarea class="form-control" id="plain" placeholder="Unencoded data..."></textarea>
+        <button class="btn btn-primary" id="encode">Encode &raquo;</button>
+    </div>
+    <div class="col-md-6">
+        <textarea class="form-control" id="base58" placeholder="Base58 data..."></textarea>
+        <button class="btn btn-primary" id="decode">&laquo; Decode</button>
+    </div>
+</div>
+
+
+</div>
+<script src="https://ipfs.io/ipfs/QmVvNwVXecuvQtKxwPuL1L58UPh9EYDU5iQSLjeN3S2sto/jquery-3.2.1.min.js"></script>
+<script src="https://ipfs.io/ipfs/QmPEJx9Bur2NNDPtBNT5zQ6bBnCkgYtKeNBAWRXx4j5hf2/js/bootstrap.min.js"></script>
+<script src="https://bitsbr.github.io/base58/jsbn.js"></script>
+<script src="https://bitsbr.github.io/base58/jsbn2.js"></script>
+<script src="https://bitsbr.github.io/base58/base58.js"></script>
+<script type="text/javascript">
+function to_hex(s) {
+    var r = '';
+    for (var i = 0; i < s.length; i++) {
+        var v;
+        if (s[i] < 0)
+            s[i] += 256;
+        v = s[i].toString(16);
+        if (v.length == 1)
+            v = '0' + v;
+        r += v;
+    }
+    return r;
+}
+function from_hex(s) {
+    var r = [];
+
+    // add a leading 0 if there are an odd number of nybbles (thanks Elias C)
+    if (s.length % 2 != 0)
+        s = '0' + s;
+
+    for (var i = 0; i < s.length; i += 2)
+        r.push(parseInt(s.substr(i, 2), 16));
+    return r;
+}
+function hexformat() {
+    return $('#hexradio').prop('checked');
+}
+
+var hexalphabet = '0123456789abcdefABCDEF';
+function strip_invalid(id, alphabet) {
+    var s = $(id).val();
+    var r = '';
+    for (var i = 0; i < s.length; i++) {
+        if (alphabet.indexOf(s.charAt(i)) != -1)
+            r += s.charAt(i);
+    }
+    $(id).val(r);
+}
+
+$('#encode').click(function() {
+    var plain;
+    if (hexformat()) {
+        strip_invalid('#plain', hexalphabet);
+        plain = from_hex($('#plain').val());
+    } else {
+        plain = base58.byte_array($('#plain').val());
+    }
+    $('#base58').val(base58.encode(plain));
+});
+$('#decode').click(function() {
+    strip_invalid('#base58', base58.alphabet);
+    plain = base58.decode($('#base58').val());
+    if (hexformat()) {
+        plain = to_hex(plain);
+    } else {
+        plain = base58.string(plain);
+    }
+    $('#plain').val(plain);
+});
+</script>
+
+      
+      
+    </main><!-- /.container -->
+      <footer>
+  <hr />
+        © TUNACOIN - Blockchain - 
+<p><i>Base58 tool by <a href="http://incoherency.co.uk/">James Stanley</a>.</i></p>
+    </footer>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+     <script>window.jQuery || document.write('<script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>
+
+  </body>
+</html>
